@@ -23,8 +23,8 @@ function Signin() {
     const signInUser = (values: any) => {
         const userAuthentication = allUsers.some((user) => user.email === values.email && user.password === values.password);
         if (userAuthentication) {
-            const { email, username } = values;
-            dispatch(addCurrentUser({ email, username }));
+            const { email } = values;
+            dispatch(addCurrentUser(email));
             form.resetFields();
             navigate("/home");
         }else{

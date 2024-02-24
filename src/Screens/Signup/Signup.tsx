@@ -49,6 +49,8 @@ function Signup() {
         }
     };
 
+    
+
     return (
         <div className='auth-form'>
             <div className="container flex justify-center items-center mx-auto w-full h-screen">
