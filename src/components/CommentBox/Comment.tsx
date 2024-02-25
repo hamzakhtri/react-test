@@ -2,14 +2,16 @@ import { Button, Dropdown, Menu, Input } from 'antd';
 import { EllipsisOutlined, SendOutlined } from '@ant-design/icons';
 import userAvatar from "../../assets/images/user.png"
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteUserComment, updateUserComment } from '../../store/features/post/postSlice';
+import { RootState } from '../../store/features/types';
 
 interface Comment {
     commentId: string;
     createdAt: number;
     commentContent: string;
     commentAuthor: string;
+    commentAuthorEmail: string;
     postId: string;
 }
 
@@ -17,11 +19,17 @@ interface CommentBoxProps {
     comment: Comment;
 }
 
+interface CurrentUser {
+    username: string;
+    email: string;
+}
+
 const CommentBox: React.FC<CommentBoxProps> = ({ comment }) => {
 
 
     const [commentContent, setCommentContent] = useState(comment.commentContent)
     const [commentEditMode, setCommentEditMode] = useState(false);
+    const currentUser = useSelector((state: RootState) => state.user.currentUser) as CurrentUser;
     const dispatch = useDispatch();
 
 
@@ -51,6 +59,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ comment }) => {
         </Menu>
     );
 
+
     return (
         <div className="flex items-start mb-3 rounded p-3 mt-3">
             {/* Left section - User avatar and name */}
@@ -60,10 +69,13 @@ const CommentBox: React.FC<CommentBoxProps> = ({ comment }) => {
             <div className="flex flex-col w-full">
                 <div className="flex justify-between mb-1">
                     <span className="text-sm font-medium">{comment.commentAuthor}</span>
-                    {/* Three dots */}
-                    <Dropdown overlay={menu} trigger={['click']}>
-                        <Button type="text" icon={<EllipsisOutlined />} />
-                    </Dropdown>
+                    {/* Three dots only show eidt and delte option to the comment author*/}
+                    {comment.commentAuthorEmail === currentUser?.email && (
+                        <Dropdown overlay={menu} trigger={['click']}>
+                            <Button type="text" icon={<EllipsisOutlined />} />
+                        </Dropdown>
+                    )}
+
                 </div>
                 {/* Comment content */}
                 <div className='flex mr-3'>

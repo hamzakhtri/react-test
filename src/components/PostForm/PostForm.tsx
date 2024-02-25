@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 
 interface User {
     username: string;
+    email: string;
 }
 
 const { TextArea } = Input;
@@ -33,6 +34,7 @@ const PostForm = () => {
         }
         const post = {
             postAuthor : currentUser.username,
+            postAuthorEmail : currentUser.email,
             postContent : postContent,
             feeling: feeling,
         }

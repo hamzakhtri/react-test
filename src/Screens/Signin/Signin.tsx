@@ -8,6 +8,7 @@ import { addCurrentUser } from '../../store/features/user/userSlice';
 import Swal from 'sweetalert2';
 import { FormInstance } from 'antd/lib';
 
+
 function Signin() {
 
 
@@ -26,8 +27,16 @@ function Signin() {
             const { email } = values;
             dispatch(addCurrentUser(email));
             form.resetFields();
+
+            // get user information and set it to the redux store 
+
+            const currentUser = allUsers.find(user => user.email === values.email);
+            if (currentUser) {
+                dispatch(addCurrentUser(currentUser));
+            }
+
             navigate("/home");
-        }else{
+        } else {
             Swal.fire({
                 title: "Auth Error",
                 text: "Invalid Credentials",
@@ -35,6 +44,9 @@ function Signin() {
             });
         }
     };
+
+
+
     return (
 
         <div className='auth-form'>

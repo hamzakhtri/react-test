@@ -3,7 +3,6 @@ import { Button, Form, Input } from 'antd';
 import logo from "../../assets/images/logo.png"
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCurrentUser } from '../../store/features/user/userSlice';
 import { addUser } from '../../store/features/user/userSlice';
 import { FormInstance } from 'antd/lib/form';
 import { RootState } from '../../store/features/types';
@@ -32,11 +31,6 @@ function Signup() {
         } else {
             dispatch(addUser(values));
             form.resetFields();
-
-            // also setting current user to redux store 
-
-            const {email, username} = values;
-            dispatch(addCurrentUser({email, username}));
 
             await Swal.fire({
                 position: "center",

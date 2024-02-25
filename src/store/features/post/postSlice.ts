@@ -6,8 +6,11 @@ interface comments {
     createdAt: number;
     commentContent: string;
     commentAuthor: string;
+    commentAuthorEmail:string;
     postId: string;
 }
+
+
 
 const initialState = {
     posts: [] as {
@@ -15,10 +18,12 @@ const initialState = {
         postContent: string;
         postAuthor: string;
         liked: boolean;
+        postAuthorEmail: string,
         feeling: string;
         numberOfLikes: number,
         createdAt: number;
         comments: comments[],
+        likedUsers: string[]
     }[],
 }
 
@@ -27,7 +32,7 @@ export const postSlice = createSlice({
     initialState,
     reducers: {
         addUserPost: (state, action) => {
-            state.posts.unshift({ ...action.payload, postId: nanoid(), createdAt: Date.now(), comments: [], numberOfLikes: 0 });
+            state.posts.unshift({ ...action.payload, postId: nanoid(), createdAt: Date.now(), comments: [], numberOfLikes: 0, likedUsers: [] });
         },
         updateUserPost: (state, action) => {
             state.posts = state.posts.map((post) => {
@@ -39,18 +44,24 @@ export const postSlice = createSlice({
         },
         addUserLike: (state, action) => {
             state.posts = state.posts.map((post) => {
-                if (post.postId === action.payload) {
+                if (post.postId === action.payload.postId) {
                     const newNumberOfLikes = post.numberOfLikes + 1;
-                    return { ...post, numberOfLikes: newNumberOfLikes };
+                    // Add the current user's email to the likedUsers array
+                    const likedUsers = [...post.likedUsers, action.payload.currentUserEmail];
+                    return { ...post, numberOfLikes: newNumberOfLikes, likedUsers };
                 }
                 return post;
             });
         },
+        // Other reducers remain unchanged
+
         removeUserLike: (state, action) => {
             state.posts = state.posts.map((post) => {
-                if (post.postId === action.payload) {
+                if (post.postId === action.payload.postId) {
                     const newNumberOfLikes = post.numberOfLikes - 1;
-                    return { ...post, numberOfLikes: newNumberOfLikes };
+                    // Remove the current user's email from the likedUsers array
+                    const likedUsers = post.likedUsers.filter((userEmail) => userEmail !== action.payload.currentUserEmail);
+                    return { ...post, numberOfLikes: newNumberOfLikes, likedUsers };
                 }
                 return post;
             });
@@ -66,7 +77,8 @@ export const postSlice = createSlice({
                         createdAt: Date.now(),
                         commentContent: action.payload.commentContent,
                         commentAuthor: action.payload.commentAuthor,
-                        postId : action.payload.postId
+                        postId: action.payload.postId,
+                        commentAuthorEmail: action.payload.commentAuthorEmail,
                     };
                     post.comments.unshift(newComment);
                 }
@@ -80,7 +92,7 @@ export const postSlice = createSlice({
                         if (comment.commentId === action.payload.commentId) {
                             return { ...comment, commentContent: action.payload.commentContent };
                         }
-                        return comment; 
+                        return comment;
                     });
                 }
                 return post;
