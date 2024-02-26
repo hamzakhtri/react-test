@@ -70,20 +70,18 @@ export const postSlice = createSlice({
             state.posts = state.posts.filter((post) => post.postId !== action.payload);
         },
         addUserComment: (state, action) => {
-            state.posts = state.posts.map((post) => {
-                if (post.postId === action.payload.postId) {
-                    const newComment: comments = {
-                        commentId: nanoid(),
-                        createdAt: Date.now(),
-                        commentContent: action.payload.commentContent,
-                        commentAuthor: action.payload.commentAuthor,
-                        postId: action.payload.postId,
-                        commentAuthorEmail: action.payload.commentAuthorEmail,
-                    };
-                    post.comments.unshift(newComment);
-                }
-                return post;
-            });
+            const { postId, commentContent, commentAuthor, commentAuthorEmail } = action.payload;
+            const postIndex = state.posts.findIndex(post => post.postId === postId);
+            if (postIndex !== -1) {
+                state.posts[postIndex].comments.unshift({
+                    commentId: nanoid(),
+                    createdAt: Date.now(),
+                    commentContent,
+                    commentAuthor,
+                    commentAuthorEmail,
+                    postId
+                });
+            }
         },
         updateUserComment: (state, action) => {
             state.posts = state.posts.map(post => {

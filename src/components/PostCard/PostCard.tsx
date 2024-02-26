@@ -72,6 +72,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     };
 
 
+    // handling emoji 
+
     const onEmojiClick = (emojiObject: any) => {
         setComment(comment + emojiObject.emoji);
         setShowEmojiPicker(false);
@@ -106,6 +108,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     const addComment = () => {
         const { postId } = post;
         dispatch(addUserComment({ commentContent: comment, postId: postId, commentAuthor: currentUser.username, commentAuthorEmail: currentUser.email }));
+        
         setComment("");
     }
 
@@ -118,6 +121,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </Menu>
     );
 
+    
     return (
         <Card className="bg-white shadow-md mt-5">
             <div className="flex items-center justify-between">
@@ -175,7 +179,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                             className="cursor-pointer hover:text-blue-500 mr-2"
                         >
-                            <SmileOutlined style={{fontSize: "20px"}} />
+                            <SmileOutlined style={{ fontSize: "20px" }} />
                         </span>
                         <Button
                             type="primary"
@@ -198,7 +202,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                         </div>
                     )}
                     {post.comments.length > 0 && post.comments.map((comment) => {
-                        return <CommentBox comment={comment} />
+                        return <CommentBox key={comment.commentId} comment={comment} />
                     })}
                 </div>
             )}

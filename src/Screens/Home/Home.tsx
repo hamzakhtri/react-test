@@ -24,7 +24,6 @@ function Home() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-
     // logout user 
 
     const logout = async () => {
